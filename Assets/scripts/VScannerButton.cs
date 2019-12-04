@@ -20,7 +20,7 @@ public class VScannerButton : MonoBehaviour
         
     private BarcodeReader barCodeReader;
      public string pubdata = "";
-     Button readQr;
+     
     EventSystem cur_Event;
     buttonControl bcont; 
     private float secondsBetweenSpawns=1;
@@ -31,7 +31,7 @@ public class VScannerButton : MonoBehaviour
        
         cur_Event = EventSystem.current;
         bcont = GameObject.Find("mainCanvas").GetComponent<buttonControl>();
-        readQr = GameObject.Find("readQR").GetComponent<Button>();
+        
         barCodeReader = new BarcodeReader();
         StartCoroutine(InitializeCamera());
         StartCoroutine(ScanEveryXSecond());

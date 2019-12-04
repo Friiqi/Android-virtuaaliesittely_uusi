@@ -29,14 +29,16 @@ public class buttonControl : MonoBehaviour
      public string[] splitString;
      VScannerButton vScannerButton;
     public VideoPlayer video;
-    public GameObject pdfrend,menuCanvas;
+    public GameObject pdfrend,menuCanvas,infopanel;
      bool touchHappened=false,urlFormed = false;
      public bool netError = false,pdfChosen = false, videoChosen=false,firstDownloadDone =false, bcontContScan;
     public Camera ARcam;
     private int clickCounter = 0, menuClick = 0;
+    
 
     void Start()
     { 
+        infopanel.gameObject.SetActive(false);
         bcontContScan = true;
          menuCanvas = GameObject.Find("menuCanvas");
          menuCanvas.SetActive(false);
@@ -109,7 +111,9 @@ public class buttonControl : MonoBehaviour
     }
     public void Update()
     {
-      
+        if(infopanel.gameObject.activeInHierarchy){
+            bcontContScan = false;
+        }
          
          if (Input.GetMouseButton(0)){
             touchHappened = true;
@@ -134,6 +138,7 @@ public class buttonControl : MonoBehaviour
             case "default":
                 hideVideoMenus();
                 bcontContScan = true;
+                infoText.gameObject.SetActive(true);
                  //vScannerButton.contScan = true;
                 x = "";
                 
@@ -168,7 +173,7 @@ public class buttonControl : MonoBehaviour
 
              //video pyörii, piilota pdf ja vid napit ja näytä videoplayeriin liittyvät napit, s
             case "videoPlayerOpen":
-            
+             infoText.gameObject.SetActive(false);
             loading.gameObject.SetActive(false);
                 play.gameObject.SetActive(true);
             //vScannerButton.contScan = false;
@@ -191,6 +196,7 @@ public class buttonControl : MonoBehaviour
                 break;
             case "pdfopen":
                 //vScannerButton.contScan = false;
+                 infoText.gameObject.SetActive(false);
                bcontContScan = false;
                 urlForming(inputUrlString);
                 
