@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QCARInfo>
+<TargetSet version="14.0" toolVersion="8.5.8">
+<ModelTarget name="Body_RGD-MY-001-DM_vivid.stl" targetId="5788ee7e56c6437a80306c0f561ed211" version="11.1" toolVersion="8.5.8" bbox="179.300003 34.347900 -4.700000 275.700012 52.800098 91.699997" previewImage="5788ee7e56c6437a80306c0f561ed211_preview.jpg"/>
+
+</TargetSet>
+
+<Assembly name="Body_RGD-MY-001-DM_vivid.stls_assembly" assemblyId="8dc60dc1ab6f40b4b1dbf2539b35558c">
+<Part name="Body_RGD-MY-001-DM_vivid.stl" translation="0 0 0" rotation="AD: 0 0 1 0"/>
+<EntryPoint name="viewpoint_0000" translation="187.069 -16.4101 247.348" rotation="AD: 0.9999740350260302 -0.03546217048202148 0.2105835039841331 198.704" image="Body_RGD-MY-001-DM_vivid.stl_viewpoint_0000.png" trained="no">
+
+</EntryPoint>
+
+</Assembly>
+
+</QCARInfo>

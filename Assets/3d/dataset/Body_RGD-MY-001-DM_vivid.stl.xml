@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QCARConfig>
+<Tracking>
+<ModelTarget name="Body_RGD-MY-001-DM_vivid.stl" motionHint="static"/>
+
+</Tracking>
+
+<Assembly name="Body_RGD-MY-001-DM_vivid.stls_assembly" assemblyId="8dc60dc1ab6f40b4b1dbf2539b35558c">
+<Part name="Body_RGD-MY-001-DM_vivid.stl" translation="0 0 0" rotation="AD: 0 0 1 0"/>
+<EntryPoint name="viewpoint_0000" translation="187.069 -16.4101 247.348" rotation="AD: 0.9999740350260302 -0.03546217048202148 0.2105835039841331 198.704" trained="no">
+
+</EntryPoint>
+
+</Assembly>
+
+</QCARConfig>
