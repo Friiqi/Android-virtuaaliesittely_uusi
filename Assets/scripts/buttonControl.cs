@@ -14,16 +14,18 @@ using UnityEditor;
 
 
 
+
 public class buttonControl : MonoBehaviour
 {
     
     //skripti olemassa että voi piilottaa/näyttää buttoneita, koska ilman viittauksia (napit sijoitetaan inspectorissa tähän scriptiin) niitä ei voinut enää .setactive(true) (saada näkyväksi) kun kerran piilotettu (.setactive(false))
     public Button pdf,vid,play,pause,stop, closePdf,menu,btnSizeUp,btnSizeDown;
     public Image menuBgImg;
-    
+   
+     
      public Slider track;
       public PDFViewer pdfViewer;
-     public string x="",inputUrlString ="",formattedUrlForPDF="",formattedUrlForMP4="",formattedUrl="",targetPathForPDF="",targetPathForMP4="";
+     public string x="",inputUrlString ="",formattedUrlForPDF="",formattedUrlForMP4="",formattedUrl="",targetPathForPDF="",targetPathForMP4="",tempString,recImgName, recImgUrl;
      
      public Text infoText,loading;
      public string[] splitString;
@@ -34,15 +36,29 @@ public class buttonControl : MonoBehaviour
      public bool netError = false,pdfChosen = false, videoChosen=false,firstDownloadDone =false, bcontContScan;
     public Camera ARcam;
     private int clickCounter = 0, menuClick = 0;
-    
+    public CloudRecoEventHandler cloudRecoEventHandler;
+    public List<string> jsonList;
+    public List<recognizedObject> recObjList;
+    public class recognizedObject {
+        public string name;
+        public string url;
+        
 
+    
+    }
     void Start()
     { 
+        jsonList = new List<string>();
+         recObjList= new List<recognizedObject>();
+        cloudRecoEventHandler = GameObject.Find("Cloud Recognition").GetComponent<CloudRecoEventHandler>();
+       
         infopanel.gameObject.SetActive(false);
         bcontContScan = true;
          menuCanvas = GameObject.Find("menuCanvas");
          menuCanvas.SetActive(false);
               vScannerButton = GameObject.Find("mainCanvas").GetComponent<VScannerButton>();
+   
+     
      
         //x = "loading";
         pdfrend = GameObject.Find("PDFViewer");
@@ -59,6 +75,20 @@ public class buttonControl : MonoBehaviour
         
         
     }
+    /*
+   public void objectCreation(){
+       recognizedObject recObj = new recognizedObject();
+       recObj.name = cloudRecoEventHandler.recogImgName;
+       recObj.url = cloudRecoEventHandler.recogImgUrl;
+       tempString = JsonUtility.ToJson(recObj);
+       recObjList.Add(recObj);
+     jsonList.Add(tempString);
+   
+     
+   }
+*/
+ 
+        
     public void buttonSizeUp(){
             if (clickCounter ==0){
              closePdf.image.rectTransform.sizeDelta = new Vector2((closePdf.image.rectTransform.sizeDelta.x*1.5f),(closePdf.image.rectTransform.sizeDelta.y*1.5f));
@@ -98,7 +128,7 @@ public class buttonControl : MonoBehaviour
             }
             clickCounter = 0;
     }
-    
+   
     public void openMenu(){
         if (menuClick ==0) {
         menuCanvas.SetActive(true);
@@ -154,7 +184,16 @@ public class buttonControl : MonoBehaviour
                 x= "";
                
                 break;
-                
+            
+            case "imgRecognized":
+            Debug.Log("recImgUrl = " + recImgUrl);
+            if(recImgUrl != null) {
+                urlForming(recImgUrl);
+                pdf.gameObject.SetActive(true);
+                vid.gameObject.SetActive(true);
+              x="";
+            }
+                break;
                
             case "loading":
              //StartCoroutine(downloadFileToLocal(formattedUrl));
@@ -162,7 +201,10 @@ public class buttonControl : MonoBehaviour
                 loading.gameObject.SetActive(true);
                //vScannerButton.contScan = false;
                 hideVideoMenus();
+                //jos inputurlstring == "" niin silloin on url jo muodostettu urlFormin(recImgUrl) kautta.
+                if (inputUrlString != ""){
                  urlForming(inputUrlString);
+                }
                 fileInLocalDevice(targetPathForMP4);
                 //Invoke("waiting",3);
                
@@ -198,8 +240,10 @@ public class buttonControl : MonoBehaviour
                 //vScannerButton.contScan = false;
                  infoText.gameObject.SetActive(false);
                bcontContScan = false;
+                //jos inputurlstring == "" niin silloin on url jo muodostettu urlFormin(recImgUrl) kautta.
+               if (inputUrlString != ""){
                 urlForming(inputUrlString);
-                
+               }
                 fileInLocalDevice(targetPathForPDF);
                     
             

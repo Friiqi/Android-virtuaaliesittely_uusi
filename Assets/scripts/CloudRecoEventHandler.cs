@@ -9,13 +9,13 @@ public class CloudRecoEventHandler : MonoBehaviour, IObjectRecoEventHandler
     ObjectTracker m_ObjectTracker;
     TargetFinder m_TargetFinder;
   
-
+    public buttonControl bcont;
 
     public ImageTargetBehaviour m_ImageTargetBehaviour;
     public UnityEngine.UI.Image m_CloudActivityIcon;
     public UnityEngine.UI.Image m_CloudIdleIcon;
-  
-
+    public string recogImgName, recogImgUrl;
+      bool mIsScanning;
 
 
 
@@ -23,6 +23,8 @@ public class CloudRecoEventHandler : MonoBehaviour, IObjectRecoEventHandler
 
     void Start()
     {
+         bcont = GameObject.Find("mainCanvas").GetComponent<buttonControl>();
+         
         // Register this event handler at the CloudRecoBehaviour
         m_CloudRecoBehaviour = GetComponent<CloudRecoBehaviour>();
         if (m_CloudRecoBehaviour)
@@ -78,7 +80,7 @@ public class CloudRecoEventHandler : MonoBehaviour, IObjectRecoEventHandler
     public void OnStateChanged(bool scanning)
     {
         Debug.Log("<color=blue>OnStateChanged(): </color>" + scanning);
-
+        mIsScanning = true;
         // Changing CloudRecoBehaviour.CloudRecoEnabled to false will call:
         // 1. TargetFinder.Stop()
         // 2. All registered ICloudRecoEventHandler.OnStateChanged() with false.
@@ -110,6 +112,14 @@ public class CloudRecoEventHandler : MonoBehaviour, IObjectRecoEventHandler
         }
         else
         {
+            
+         
+          bcont.recImgName = targetSearchResult.TargetName;
+          bcont.recImgUrl = cloudRecoResult.MetaData;
+           //bcont.objectCreation();
+            bcont.x = "imgRecognized";
+            
+           
             Debug.Log("MetaData: " + cloudRecoResult.MetaData);
             Debug.Log("TargetName: " + cloudRecoResult.TargetName);
             Debug.Log("Pointer: " + cloudRecoResult.TargetSearchResultPtr);
@@ -121,7 +131,7 @@ public class CloudRecoEventHandler : MonoBehaviour, IObjectRecoEventHandler
         // Changing CloudRecoBehaviour.CloudRecoEnabled to false will call TargetFinder.Stop()
         // and also call all registered ICloudRecoEventHandler.OnStateChanged() with false.
         m_CloudRecoBehaviour.CloudRecoEnabled = false;
-
+        mIsScanning = false;
         // Clear any existing trackables
         m_TargetFinder.ClearTrackables(false);
 
@@ -131,7 +141,22 @@ public class CloudRecoEventHandler : MonoBehaviour, IObjectRecoEventHandler
         // Pass the TargetSearchResult to the Trackable Event Handler for processing
         m_ImageTargetBehaviour.gameObject.SendMessage("TargetCreated", cloudRecoResult, SendMessageOptions.DontRequireReceiver);
     }
- 
+ void OnGUI() {
+    // Display current 'scanning' status
+    //GUI.Box (new Rect(100,100,200,50), mIsScanning ? "Scanning" : "Not scanning");
+    // Display metadata of latest detected cloud-target
+    //GUI.Box (new Rect(100,200,200,50), "Metadata: " + mTargetMetadata);
+    // If not scanning, show button
+    // so that user can restart cloud scanning
+    
+    if (!mIsScanning) {
+        if (GUI.Button(new Rect(100,300,200,50), "Restart Scanning")) {
+        // Restart TargetFinder
+        m_CloudRecoBehaviour.CloudRecoEnabled = true;
+        }
+    }
+    
+}
 
 
    
