@@ -1670,4 +1670,4 @@ ScriptsOnlyBuild:
   platform: 13
   scenePathNames:
   - Assets/Scenes/mainScene.unity
-  playerPath: D:/unity/projektit/Android-virtuaaliesittely/Android virtuaaliesittely/virtuaaliesittely_0.9.9.9.apk
+  playerPath: D:/unity/projektit/Android-virtuaaliesittely/Android virtuaaliesittely/virtuaaliesittely_0.9.9.9.1.apk
