@@ -2,6 +2,7 @@ ScriptsOnlyBuild:
   usedScripts:
     Assembly-CSharp.dll:
     - ARon_deactivate_pdf
+    - CloudRecoEventHandler
     - Paroxe.PdfRenderer.Internal.Viewer.PDFBookmarkListItem
     - Paroxe.PdfRenderer.Internal.Viewer.PDFBookmarksViewer
     - Paroxe.PdfRenderer.Internal.Viewer.PDFSearchPanel
@@ -176,27 +177,29 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 11184}
     - Class: 114
-      Script: {instanceID: 11448}
+      Script: {instanceID: 11450}
     - Class: 114
-      Script: {instanceID: 11504}
+      Script: {instanceID: 11506}
     - Class: 114
-      Script: {instanceID: 11540}
+      Script: {instanceID: 11542}
     - Class: 114
-      Script: {instanceID: 11680}
+      Script: {instanceID: 11584}
     - Class: 114
-      Script: {instanceID: 11748}
+      Script: {instanceID: 11682}
     - Class: 114
-      Script: {instanceID: 11762}
+      Script: {instanceID: 11750}
     - Class: 114
-      Script: {instanceID: 11800}
+      Script: {instanceID: 11764}
     - Class: 114
-      Script: {instanceID: 11910}
+      Script: {instanceID: 11802}
     - Class: 114
-      Script: {instanceID: 11950}
+      Script: {instanceID: 11912}
     - Class: 114
-      Script: {instanceID: 11964}
+      Script: {instanceID: 11952}
     - Class: 114
-      Script: {instanceID: 11972}
+      Script: {instanceID: 11966}
+    - Class: 114
+      Script: {instanceID: 11974}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -442,7 +445,7 @@ ScriptsOnlyBuild:
     className: Shadow
   - hash:
       serializedVersion: 2
-      Hash: d24a0df4de85eec291e2d992cc211c6e
+      Hash: a16950978a501876e8c8f4c7a364e9a1
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: buttonControl
@@ -1048,6 +1051,12 @@ ScriptsOnlyBuild:
     className: Physics2DRaycaster
   - hash:
       serializedVersion: 2
+      Hash: cdb5973957875b516615cd879b04b351
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: buttonPressed
+  - hash:
+      serializedVersion: 2
       Hash: c1933cc0a2f4ff6eb13333347497beb3
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
@@ -1114,7 +1123,7 @@ ScriptsOnlyBuild:
     className: PDFViewerLeftPanelScrollbar
   - hash:
       serializedVersion: 2
-      Hash: 716f7c2ef42786f749432eef57f8a2f1
+      Hash: 726084b3500e755e11a384b9fff74725
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: CloudRecoEventHandler
@@ -1661,4 +1670,4 @@ ScriptsOnlyBuild:
   platform: 13
   scenePathNames:
   - Assets/Scenes/mainScene.unity
-  playerPath: D:/unity/projektit/Android-virtuaaliesittely/Android virtuaaliesittely/virtuaaliesittely_0.9.x_3.12.19_ilta2.apk
+  playerPath: D:/unity/projektit/Android-virtuaaliesittely/Android virtuaaliesittely/virtuaaliesittely_0.9.9.9.apk

@@ -20,24 +20,22 @@ public class closeButtonFunctions : MonoBehaviour
        bcont.videoChosen = false;
  }
   public void PDFoff(){
-     // vScannerButton.restartScan = true;
      bcont.pdfrend.SetActive(false);
- 
-    setXtoDefault();
+     setXtoDefault();
  }
 
 public void closeInfoPanel(){
-bcont.infopanel.gameObject.SetActive(false);
-//pidetään huoli ettei infoikkunan sulkeminen eri tilanteissa piilota vääriä nappeja jne
-if (bcont.pdfrend.activeInHierarchy){
-    bcont.x ="pdfOpen";
-}
-else if ( bcont.video.isActiveAndEnabled) {
-     bcont.x ="videoPlayerOpen";
-}
-else {
-bcont.x = "default";
-}
-}
+    bcont.infopanel.gameObject.SetActive(false);
+    //pidetään huoli ettei infoikkunan sulkeminen eri tilanteissa piilota vääriä nappeja jne
+    if (bcont.pdfrend.activeInHierarchy){
+        bcont.x ="pdfOpen";
+    }
+    else if (bcont.videoPlayerIsOpen) {
+        bcont.x ="videoPlayerOpen";
+    }
+    else {
+        setXtoDefault();
+    }
+    }
  
 }

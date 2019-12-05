@@ -101,6 +101,7 @@
      <Compile Include="Assets\Paroxe\PDFRenderer\Internal\Scripts\Viewer\PDFViewerSearchButton.cs" />
      <Compile Include="Assets\scripts\ARon_deactivate_pdf.cs" />
      <Compile Include="Assets\scripts\buttonControl.cs" />
+     <Compile Include="Assets\scripts\buttonPressed.cs" />
      <Compile Include="Assets\scripts\closeButtonFunctions.cs" />
      <Compile Include="Assets\scripts\CloudRecoControl.cs" />
      <Compile Include="Assets\scripts\CloudRecoEventHandler.cs" />
