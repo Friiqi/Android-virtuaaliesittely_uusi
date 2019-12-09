@@ -1,15 +1,14 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections;
-using UnityEngine.UI;
+
 using Vuforia;
 using UnityEngine.EventSystems;
 
 using System.Threading;
 
 using ZXing;
-using ZXing.QrCode;
-using ZXing.Common;
+
 
 [AddComponentMenu("System/VScannerButton")]
 public class VScannerButton : MonoBehaviour
@@ -38,15 +37,11 @@ public class VScannerButton : MonoBehaviour
         //InvokeRepeating("Scan", 0, 1.0f);
     }   
     void Update() {
-        /*
-       if (bcont.bcontContScan){
-           Debug.Log("scannerbuttonin sisällä contscan false");
-       }
-       */
+     
         if (restartScan){
-        StartCoroutine(InitializeCamera());
-        StartCoroutine(ScanEveryXSecond());
-        restartScan = false;
+            StartCoroutine(InitializeCamera());
+            StartCoroutine(ScanEveryXSecond());
+            restartScan = false;
         }
     }
  private IEnumerator ScanEveryXSecond(){
@@ -72,7 +67,7 @@ private IEnumerator InitializeCamera()
         }
         Debug.Log(String.Format("AutoFocus : {0}", isAutoFocus));
         
-         //CameraDevice.Instance.SetFocusMode(CameraDevice.FocusMode.FOCUS_MODE_NORMAL);
+         
         cameraInitialized = true;
     }
   
@@ -90,7 +85,7 @@ private IEnumerator InitializeCamera()
             bcont.x = "pdfvid";
                 isDecoding = false;
                 bcont.inputUrlString = data.ToString();
-                Debug.Log("data: " + data);
+            
                 data = null;
             }
         else
@@ -121,24 +116,7 @@ private IEnumerator InitializeCamera()
                 ThreadPool.QueueUserWorkItem(new WaitCallback(DecodeQr), cameraFeed);
                 
                
-            /*
-                
-                if (data != null)
-                {
-                pubdata = barCodeReader.Decode(cameraFeed.Pixels, cameraFeed.BufferWidth, cameraFeed.BufferHeight, RGBLuminanceSource.BitmapFormat.Gray8).ToString();
-                bcont.inputUrlString = pubdata;
-                    // QRCode detected.
-                   bcont.x = "pdfvid";
-                    //readQr.Select();
-                    
-                   
-                    
-                }
-                else
-                {
-                    //Invoke("deSelectBtn", 1.0f);
-                }
-                */
+       
             }
                 
             catch (Exception e)

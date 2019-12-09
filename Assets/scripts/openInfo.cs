@@ -14,9 +14,8 @@ public class openInfo : MonoBehaviour
     }
     public void openInfoPanel() {
         bcont.infopanel.gameObject.SetActive(true);
-    
-      
-
+       
+  
     }
   
 }

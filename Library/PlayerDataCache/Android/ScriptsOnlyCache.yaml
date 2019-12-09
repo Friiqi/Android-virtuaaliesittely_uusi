@@ -15,7 +15,6 @@ ScriptsOnlyBuild:
     - Paroxe.PdfRenderer.Internal.Viewer.PDFViewerSearchButton
     - Paroxe.PdfRenderer.PDFAsset
     - Paroxe.PdfRenderer.PDFViewer
-    - QRText
     - SimpleCloudHandler
     - VScannerButton
     - buttonControl
@@ -224,12 +223,6 @@ ScriptsOnlyBuild:
   - hash:
       serializedVersion: 2
       Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: UIelementSize
-  - hash:
-      serializedVersion: 2
-      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
     assemblyName: VuforiaScripts.dll
     namespaceName: 
     className: BoundingBoxRenderer
@@ -355,12 +348,6 @@ ScriptsOnlyBuild:
     className: GridLayoutGroup
   - hash:
       serializedVersion: 2
-      Hash: d7a31e7fdfa242602066309140b50385
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: QRText
-  - hash:
-      serializedVersion: 2
       Hash: ca4642cb2bc0707fab1def22e5f98d02
     assemblyName: Assembly-CSharp.dll
     namespaceName: Paroxe.PdfRenderer.Internal.Viewer
@@ -445,7 +432,7 @@ ScriptsOnlyBuild:
     className: Shadow
   - hash:
       serializedVersion: 2
-      Hash: a16950978a501876e8c8f4c7a364e9a1
+      Hash: c5528bed07021c92e398509cdd30498b
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: buttonControl
@@ -1051,12 +1038,6 @@ ScriptsOnlyBuild:
     className: Physics2DRaycaster
   - hash:
       serializedVersion: 2
-      Hash: cdb5973957875b516615cd879b04b351
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: buttonPressed
-  - hash:
-      serializedVersion: 2
       Hash: c1933cc0a2f4ff6eb13333347497beb3
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
@@ -1405,12 +1386,6 @@ ScriptsOnlyBuild:
     className: WireframeTrackableEventHandler
   - hash:
       serializedVersion: 2
-      Hash: ee20d80db0e71b45fa52fb7b04c4606c
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: openURL
-  - hash:
-      serializedVersion: 2
       Hash: 20eeaeae829475b5e354d1f626c51a2b
     assemblyName: UnityEngine.TestRunner.dll
     namespaceName: UnityEngine.TestTools.TestRunner
@@ -1670,4 +1645,4 @@ ScriptsOnlyBuild:
   platform: 13
   scenePathNames:
   - Assets/Scenes/mainScene.unity
-  playerPath: D:/unity/projektit/Android-virtuaaliesittely/Android virtuaaliesittely/virtuaaliesittely_0.9.9.9.1.apk
+  playerPath: D:/unity/projektit/Android-virtuaaliesittely/Android virtuaaliesittely/virtuaaliesittely_0.9.9.9.5.apk

@@ -101,26 +101,19 @@
      <Compile Include="Assets\Paroxe\PDFRenderer\Internal\Scripts\Viewer\PDFViewerSearchButton.cs" />
      <Compile Include="Assets\scripts\ARon_deactivate_pdf.cs" />
      <Compile Include="Assets\scripts\buttonControl.cs" />
-     <Compile Include="Assets\scripts\buttonPressed.cs" />
      <Compile Include="Assets\scripts\closeButtonFunctions.cs" />
      <Compile Include="Assets\scripts\CloudRecoControl.cs" />
      <Compile Include="Assets\scripts\CloudRecoEventHandler.cs" />
      <Compile Include="Assets\scripts\CloudUpLoading.cs" />
      <Compile Include="Assets\scripts\openInfo.cs" />
      <Compile Include="Assets\scripts\openPDF.cs" />
-     <Compile Include="Assets\scripts\openURL.cs" />
      <Compile Include="Assets\scripts\openVideo.cs" />
      <Compile Include="Assets\scripts\PDFViewerScript.cs" />
-     <Compile Include="Assets\scripts\QRText.cs" />
      <Compile Include="Assets\scripts\SimpleCloudHandler.cs" />
      <Compile Include="Assets\scripts\track.cs" />
-     <Compile Include="Assets\scripts\UIelementSize.cs" />
      <Compile Include="Assets\scripts\VScannerButton.cs" />
-     <None Include="Assets\3d\dataset\Body_RGD-MY-001-DM_vivid.stl.xml" />
      <None Include="Assets\Font\LICENSE.txt" />
-     <None Include="Assets\StreamingAssets\Vuforia\Body_RGD-MY-001-DM_vivid.stl.xml" />
      <None Include="Assets\Paroxe\PDFRenderer\PDFRendererNotice.txt" />
-     <None Include="Assets\StreamingAssets\Vuforia\AR_Savonia_test_target.xml" />
  <Reference Include="Unity.Timeline.Editor">
  <HintPath>D:/unity/projektit/Android-virtuaaliesittely_uusi/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
  </Reference>
