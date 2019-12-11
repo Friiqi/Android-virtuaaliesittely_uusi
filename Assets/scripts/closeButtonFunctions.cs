@@ -7,23 +7,38 @@ public class closeButtonFunctions : MonoBehaviour
 {
     buttonControl bcont; 
     VScannerButton vScannerButton;
-  
+   
     void Start(){
          bcont = GameObject.Find("mainCanvas").GetComponent<buttonControl>();
         vScannerButton = GameObject.Find("mainCanvas").GetComponent<VScannerButton>();
+       
+       
     }
  public void setXtoDefault(){
      bcont.x = "default";
       bcont.pdfChosen = false;
        bcont.videoChosen = false;
  }
+ public void closeVideoShowPdfvid(){
+     bcont.x = "pdfvid";
+ }
   public void PDFoff(){
-     // vScannerButton.restartScan = true;
      bcont.pdfrend.SetActive(false);
- 
-    setXtoDefault();
+     bcont.x = "pdfvid";
+     bcont.bcontContScan = true;
+     vScannerButton.restartScan = true;
  }
 
-
+public void closeInfoPanel(){
+    bcont.infopanel.gameObject.SetActive(false);
+    //pidetään huoli ettei infoikkunan sulkeminen eri tilanteissa piilota vääriä nappeja jne
+    if (bcont.pdfrend.activeInHierarchy){
+        bcont.x ="pdfOpen";
+    }
+    else if (bcont.videoPlayerIsOpen) {
+        bcont.x ="videoPlayerOpen";
+    }
+  
+    }
  
 }

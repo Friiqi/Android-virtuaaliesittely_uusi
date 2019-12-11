@@ -1,15 +1,14 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections;
-using UnityEngine.UI;
+
 using Vuforia;
 using UnityEngine.EventSystems;
 
 using System.Threading;
 
 using ZXing;
-using ZXing.QrCode;
-using ZXing.Common;
+
 
 [AddComponentMenu("System/VScannerButton")]
 public class VScannerButton : MonoBehaviour
@@ -20,7 +19,7 @@ public class VScannerButton : MonoBehaviour
         
     private BarcodeReader barCodeReader;
      public string pubdata = "";
-     Button readQr;
+     
     EventSystem cur_Event;
     buttonControl bcont; 
     private float secondsBetweenSpawns=1;
@@ -31,23 +30,19 @@ public class VScannerButton : MonoBehaviour
        
         cur_Event = EventSystem.current;
         bcont = GameObject.Find("mainCanvas").GetComponent<buttonControl>();
-        readQr = GameObject.Find("readQR").GetComponent<Button>();
+        
         barCodeReader = new BarcodeReader();
         StartCoroutine(InitializeCamera());
         StartCoroutine(ScanEveryXSecond());
         //InvokeRepeating("Scan", 0, 1.0f);
     }   
     void Update() {
-        /*
-       if (bcont.bcontContScan){
-           Debug.Log("scannerbuttonin sisällä contscan false");
-       }
-       */
-        if (restartScan){
-        StartCoroutine(InitializeCamera());
+     if (restartScan){
+         restartScan = false;
+         StartCoroutine(InitializeCamera());
         StartCoroutine(ScanEveryXSecond());
-        restartScan = false;
-        }
+     }
+     
     }
  private IEnumerator ScanEveryXSecond(){
      while (bcont.bcontContScan){
@@ -59,7 +54,7 @@ public class VScannerButton : MonoBehaviour
 private IEnumerator InitializeCamera()
     {
         // Waiting a little seem to avoid the Vuforia's crashes.
-        yield return new WaitForSeconds(1.25f);
+        yield return new WaitForSeconds(.75f);
 
         var isFrameFormatSet = CameraDevice.Instance.SetFrameFormat(PIXEL_FORMAT.GRAYSCALE, true);
         Debug.Log(String.Format("FormatSet : {0}", isFrameFormatSet));
@@ -72,7 +67,7 @@ private IEnumerator InitializeCamera()
         }
         Debug.Log(String.Format("AutoFocus : {0}", isAutoFocus));
         
-         //CameraDevice.Instance.SetFocusMode(CameraDevice.FocusMode.FOCUS_MODE_NORMAL);
+         
         cameraInitialized = true;
     }
   
@@ -90,7 +85,7 @@ private IEnumerator InitializeCamera()
             bcont.x = "pdfvid";
                 isDecoding = false;
                 bcont.inputUrlString = data.ToString();
-                Debug.Log("data: " + data);
+            
                 data = null;
             }
         else
@@ -121,24 +116,7 @@ private IEnumerator InitializeCamera()
                 ThreadPool.QueueUserWorkItem(new WaitCallback(DecodeQr), cameraFeed);
                 
                
-            /*
-                
-                if (data != null)
-                {
-                pubdata = barCodeReader.Decode(cameraFeed.Pixels, cameraFeed.BufferWidth, cameraFeed.BufferHeight, RGBLuminanceSource.BitmapFormat.Gray8).ToString();
-                bcont.inputUrlString = pubdata;
-                    // QRCode detected.
-                   bcont.x = "pdfvid";
-                    //readQr.Select();
-                    
-                   
-                    
-                }
-                else
-                {
-                    //Invoke("deSelectBtn", 1.0f);
-                }
-                */
+       
             }
                 
             catch (Exception e)
