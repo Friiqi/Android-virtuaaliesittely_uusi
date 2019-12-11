@@ -18,7 +18,7 @@ public class buttonControl : MonoBehaviour
 {
     
     //skripti olemassa että voi piilottaa/näyttää buttoneita ja muita, koska ilman viittauksia (gameobjektit sijoitetaan inspectorissa tähän scriptiin) niitä ei voinut enää .setactive(true) (saada näkyväksi) kun kerran piilotettu (.setactive(false))
-    public Button pdf,vid,play,pause,stop, closePdf,menu,btnSizeUp,btnSizeDown,btnForceDownload,infoBtn;
+    public Button pdf,vid,play,pause,stop, closePdf,menu,btnSizeUp,btnSizeDown,btnForceDownload,infoBtn,btnImgRec,btnImgRecOff,menuBtn;
     public Image menuBgImg;
    
      
@@ -30,11 +30,13 @@ public class buttonControl : MonoBehaviour
      public string[] splitString;
      VScannerButton vScannerButton;
     public VideoPlayer video;
-    public GameObject pdfrend,menuCanvas,infopanel;
+    public GameObject pdfrend,menuCanvas,infopanel,imageTarget, cloudRecognition;
      bool touchHappened,pressed;
      public bool pdfChosen, videoChosen, bcontContScan,videoPlayerIsOpen,forceDownload;
     public Camera camToUse;
-    private int clickCounter = 0, menuClick = 0;
+    private bool imgRec;
+    private int clickCounter = 0, menuClick = 0,imgRecClick;
+    
     //public CloudRecoEventHandler cloudRecoEventHandler;
   
      bool urlOK;
@@ -43,9 +45,9 @@ public class buttonControl : MonoBehaviour
     void Start()
     { 
         
-      
+      imgRecClick = 0;
         //cloudRecoEventHandler = GameObject.Find("Cloud Recognition").GetComponent<CloudRecoEventHandler>();
-       
+   
         infopanel.gameObject.SetActive(false);
         bcontContScan = true;
         menuCanvas = GameObject.Find("menuCanvas");
@@ -71,9 +73,14 @@ public class buttonControl : MonoBehaviour
         
     public void buttonSizeUp(){
             if (clickCounter ==0){
-             closePdf.image.rectTransform.sizeDelta = new Vector2((closePdf.image.rectTransform.sizeDelta.x*1.5f),(closePdf.image.rectTransform.sizeDelta.y*1.5f));
-             loading.fontSize = 30;
-             infoText.fontSize = 30;    
+            infoBtn.image.rectTransform.sizeDelta = new Vector2((infoBtn.image.rectTransform.sizeDelta.x*1.5f),(infoBtn.image.rectTransform.sizeDelta.y*1.5f));
+            btnForceDownload.image.rectTransform.sizeDelta = new Vector2((btnForceDownload.image.rectTransform.sizeDelta.x*1.5f),(btnForceDownload.image.rectTransform.sizeDelta.y*1.5f));
+            btnImgRecOff.image.rectTransform.sizeDelta = new Vector2((btnImgRecOff.image.rectTransform.sizeDelta.x*1.5f),(btnImgRecOff.image.rectTransform.sizeDelta.y*1.5f));
+            closePdf.image.rectTransform.sizeDelta = new Vector2((closePdf.image.rectTransform.sizeDelta.x*1.5f),(closePdf.image.rectTransform.sizeDelta.y*1.5f));
+            loading.fontSize = 30;
+            infoText.fontSize = 30; 
+             
+              
              pdf.image.rectTransform.sizeDelta = new Vector2((pdf.image.rectTransform.sizeDelta.x*1.5f),(pdf.image.rectTransform.sizeDelta.y*1.5f));
              vid.image.rectTransform.sizeDelta = new Vector2((vid.image.rectTransform.sizeDelta.x*1.5f),(vid.image.rectTransform.sizeDelta.y*1.5f));
              play.image.rectTransform.sizeDelta = new Vector2((play.image.rectTransform.sizeDelta.x*1.5f),(play.image.rectTransform.sizeDelta.y*1.5f));
@@ -90,12 +97,16 @@ public class buttonControl : MonoBehaviour
 
     public void buttonSizeDown(){
             if (clickCounter ==1){
+            infoBtn.image.rectTransform.sizeDelta =new Vector2(80, 80);
+            btnForceDownload.image.rectTransform.sizeDelta =new Vector2(80, 80);
+            btnImgRecOff.image.rectTransform.sizeDelta = new Vector2(80, 80);
             closePdf.image.rectTransform.sizeDelta =  new Vector2(80, 80);
             loading.fontSize = 20;   
             pdf.image.rectTransform.sizeDelta = new Vector2(80, 80);
             btnSizeDown.image.rectTransform.sizeDelta = new Vector2(80, 80);
             btnSizeUp.image.rectTransform.sizeDelta = new Vector2(80, 80);
             infoText.fontSize = 20;
+              
              vid.image.rectTransform.sizeDelta =  new Vector2(80, 80);
              play.image.rectTransform.sizeDelta =  new Vector2(80, 80);
              pause.image.rectTransform.sizeDelta =  new Vector2(80, 80);
@@ -120,10 +131,15 @@ public class buttonControl : MonoBehaviour
   
     public void Update()
     {
+         
        //jatkuva skannaus poist päältä jos infopanel auki.
         if(infopanel.gameObject.activeInHierarchy){
             bcontContScan = false;
         }
+        if (!cloudRecognition.gameObject.activeInHierarchy) {
+            btnImgRec.gameObject.SetActive(false);
+        }
+      
          //allaolevat 3 iffiä ovat videoUIn piilotus/näyttämistä varten videon pyöriessä
          if (Input.GetMouseButton(0)){
             touchHappened = true;
@@ -131,15 +147,19 @@ public class buttonControl : MonoBehaviour
         }
         
        if (video.isPlaying && !touchHappened ) {
-           Invoke("playing",2 );
+          Invoke("playing",2 );
        }
-
+        
         if ((touchHappened && video.isPlaying) || (touchHappened && video.isPaused)){
         x = "videoPlayerOpen";
-      
     }
-      
-        
+    
+      if (imgRec) {
+          btnImgRecOff.image.color = Color.white;
+      }
+       if (!imgRec) {
+          btnImgRecOff.image.color = Color.red;
+      }  
         //x-arvo vaihdetaan VScannerButton-scriptin kautta
         if (x != ""){
       
@@ -147,24 +167,34 @@ public class buttonControl : MonoBehaviour
         switch (x) {
             
             case "default":
-                hideVideoMenus();
+                play.gameObject.SetActive(false);
+                menuBtn.gameObject.SetActive(true);
+                pause.gameObject.SetActive(false);
+                stop.gameObject.SetActive(false);
+                track.gameObject.SetActive(false); 
                 bcontContScan = true;
                 infoText.gameObject.SetActive(true);
                 infoBtn.gameObject.SetActive(true);
                 loading.gameObject.SetActive(false);
                 infoText.text = "Osoita QR koodia.  Onnistunut skannaus avaa valikon oikeaan reunaan.";
                 videoPlayerIsOpen = false;
-                x = "";
-                
+               
+                 pdf.gameObject.SetActive(true);
+                vid.gameObject.SetActive(true);
                 closePdf.gameObject.SetActive(false);
                 vScannerButton.restartScan = true;
+                x = "";
                 break;
                 //näytä pdf ja vid-napit
             case "pdfvid":
-              urlForming(inputUrlString);
+              if (inputUrlString != ""){
+                 urlForming(inputUrlString);
+               }
                 pdf.gameObject.SetActive(true);
                 vid.gameObject.SetActive(true);
-                
+                infoBtn.gameObject.SetActive(true);
+                menuBtn.gameObject.SetActive(true);
+               
                 x= "";
                
                 break;
@@ -196,6 +226,7 @@ public class buttonControl : MonoBehaviour
                 else if (forceDownload) {
                     loading.gameObject.SetActive(true);
                 }
+                 x= "";
                 break;
 
            
@@ -204,7 +235,7 @@ public class buttonControl : MonoBehaviour
                 infoText.gameObject.SetActive(false);
                 loading.gameObject.SetActive(false);
                 play.gameObject.SetActive(true);
-            
+                menuBtn.gameObject.SetActive(false);
                 pause.gameObject.SetActive(true);
                 stop.gameObject.SetActive(true);
                 track.gameObject.SetActive(true);
@@ -215,16 +246,28 @@ public class buttonControl : MonoBehaviour
               x = "";
                 break;
             case "playing":
+            if (!bcontContScan){
                 infoBtn.gameObject.SetActive(false);
                 loading.gameObject.SetActive(false);
-                hideVideoMenus();
-       
-                x = "";
+                play.gameObject.SetActive(false);
+                pdf.gameObject.SetActive(false);
+                vid.gameObject.SetActive(false);
+                pause.gameObject.SetActive(false);
+                stop.gameObject.SetActive(false);
+                track.gameObject.SetActive(false);
+               
+            }
+            else if (bcontContScan){
+                x = "default";
+              
+            }
+                 x= "";
                 break;
             case "pdfopen":
                 infoBtn.gameObject.SetActive(false);
                 infoText.gameObject.SetActive(false);
                 bcontContScan = false;
+                menuBtn.gameObject.SetActive(false);
                 //jos inputurlstring == "" niin silloin on url jo muodostettu urlForm(recImgUrl) kautta.
                if (inputUrlString != ""){
                  urlForming(inputUrlString);
@@ -235,7 +278,7 @@ public class buttonControl : MonoBehaviour
      
                 x = "";
                 break;
-            
+          
             default:
              x = "";
                 break;
@@ -244,7 +287,29 @@ public class buttonControl : MonoBehaviour
        
     }
     }
-    
+   
+    public void imgRecOnOff(){
+        if (!imgRec && imgRecClick == 0){
+             imageTarget.gameObject.SetActive(true);
+            cloudRecognition.gameObject.SetActive(true);
+            
+            imgRec = true;
+        Debug.Log("cloud rec: " + cloudRecognition.gameObject.activeInHierarchy);
+        Debug.Log("imgtarget: " + imageTarget.gameObject.activeInHierarchy);
+            imgRecClick++;
+         
+        }
+        else if (imgRec && imgRecClick == 1) {
+            Debug.Log("toisen iffin sisalla");
+          
+          imageTarget.gameObject.SetActive(false);
+            cloudRecognition.gameObject.SetActive(false);
+            imgRec = false;
+           Debug.Log("cloud rec: " + cloudRecognition.gameObject.activeInHierarchy);
+           Debug.Log("imgtarget: " + imageTarget.gameObject.activeInHierarchy);
+           imgRecClick = 0;
+        }
+    }
    
     void touchTimer(){
        touchHappened = false;

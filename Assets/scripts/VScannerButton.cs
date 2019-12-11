@@ -37,12 +37,12 @@ public class VScannerButton : MonoBehaviour
         //InvokeRepeating("Scan", 0, 1.0f);
     }   
     void Update() {
+     if (restartScan){
+         restartScan = false;
+         StartCoroutine(InitializeCamera());
+        StartCoroutine(ScanEveryXSecond());
+     }
      
-        if (restartScan){
-            StartCoroutine(InitializeCamera());
-            StartCoroutine(ScanEveryXSecond());
-            restartScan = false;
-        }
     }
  private IEnumerator ScanEveryXSecond(){
      while (bcont.bcontContScan){
@@ -54,7 +54,7 @@ public class VScannerButton : MonoBehaviour
 private IEnumerator InitializeCamera()
     {
         // Waiting a little seem to avoid the Vuforia's crashes.
-        yield return new WaitForSeconds(1.25f);
+        yield return new WaitForSeconds(.75f);
 
         var isFrameFormatSet = CameraDevice.Instance.SetFrameFormat(PIXEL_FORMAT.GRAYSCALE, true);
         Debug.Log(String.Format("FormatSet : {0}", isFrameFormatSet));

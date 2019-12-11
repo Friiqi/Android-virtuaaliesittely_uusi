@@ -19,9 +19,14 @@ public class closeButtonFunctions : MonoBehaviour
       bcont.pdfChosen = false;
        bcont.videoChosen = false;
  }
+ public void closeVideoShowPdfvid(){
+     bcont.x = "pdfvid";
+ }
   public void PDFoff(){
      bcont.pdfrend.SetActive(false);
-     setXtoDefault();
+     bcont.x = "pdfvid";
+     bcont.bcontContScan = true;
+     vScannerButton.restartScan = true;
  }
 
 public void closeInfoPanel(){
@@ -33,9 +38,7 @@ public void closeInfoPanel(){
     else if (bcont.videoPlayerIsOpen) {
         bcont.x ="videoPlayerOpen";
     }
-    else {
-        setXtoDefault();
-    }
+  
     }
  
 }

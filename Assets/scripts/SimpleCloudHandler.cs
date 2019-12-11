@@ -63,7 +63,7 @@ public class SimpleCloudHandler : MonoBehaviour, IObjectRecoEventHandler {
     // so that user can restart cloud scanning
     
     if (!mIsScanning) {
-        if (GUI.Button(new Rect(100,300,200,50), "Restart Scanning")) {
+        if (GUI.Button(new Rect(200,300,200,50), "Restart Scanning")) {
         // Restart TargetFinder
         mCloudRecoBehaviour.CloudRecoEnabled = true;
         }
