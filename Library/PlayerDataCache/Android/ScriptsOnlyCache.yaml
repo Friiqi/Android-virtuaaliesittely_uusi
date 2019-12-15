@@ -196,7 +196,7 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 11968}
     - Class: 114
-      Script: {instanceID: 14808}
+      Script: {instanceID: 14782}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -430,7 +430,7 @@ ScriptsOnlyBuild:
     className: Shadow
   - hash:
       serializedVersion: 2
-      Hash: 210f8c02252e197b682b7245400c01e8
+      Hash: 4c05b276ec22153711724e0b00ff4251
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: buttonControl
@@ -1102,7 +1102,7 @@ ScriptsOnlyBuild:
     className: PDFViewerLeftPanelScrollbar
   - hash:
       serializedVersion: 2
-      Hash: c6e506d652ad46f6d99dd73bb6f92153
+      Hash: 1121e49fd145a56f9448ed5ffaf629b5
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: CloudRecoEventHandler
@@ -1643,4 +1643,4 @@ ScriptsOnlyBuild:
   platform: 13
   scenePathNames:
   - Assets/Scenes/mainScene.unity
-  playerPath: D:/unity/projektit/Android-virtuaaliesittely/Android virtuaaliesittely/virtuaaliesittely_1.1.apk
+  playerPath: D:/unity/projektit/Android-virtuaaliesittely_uusi/virtuaaliesittely_1.1.2.apk

@@ -18,7 +18,7 @@ public class buttonControl : MonoBehaviour
 {
     
     //skripti olemassa että voi piilottaa/näyttää buttoneita ja muita, koska ilman viittauksia (gameobjektit sijoitetaan inspectorissa tähän scriptiin) niitä ei voinut enää .setactive(true) (saada näkyväksi) kun kerran piilotettu (.setactive(false))
-    public Button pdf,vid,play,pause,stop, closePdf,menu,btnSizeUp,btnSizeDown,btnForceDownload,infoBtn,btnImgRec,btnImgRecOff,menuBtn;
+    public Button pdf,vid,play,pause,stop, closePdf,menu,btnSizeUp,btnSizeDown,btnForceDownload,infoBtn,btnQrRecognized,btnImgRecognized,btnImgRecOff,menuBtn;
     public Image menuBgImg;
    
      
@@ -32,9 +32,10 @@ public class buttonControl : MonoBehaviour
     public VideoPlayer video;
     public GameObject pdfrend,menuCanvas,infopanel,imageTarget, cloudRecognition;
      bool touchHappened,pressed;
-     public bool pdfChosen, videoChosen, bcontContScan,videoPlayerIsOpen,forceDownload;
+     public bool pdfChosen, videoChosen, bcontContScan,videoPlayerIsOpen,forceDownload,qrRecognized,bcontShowButton;
     public Camera camToUse;
-    private bool imgRec;
+    public CloudRecoEventHandler cloudRecoEventHandler;
+    private bool imgRec,cloudRecoBtnVisible;
     private int clickCounter = 0, menuClick = 0,imgRecClick;
     
     //public CloudRecoEventHandler cloudRecoEventHandler;
@@ -43,8 +44,12 @@ public class buttonControl : MonoBehaviour
 
  
     void Start()
-    { 
-        
+    {
+         cloudRecoEventHandler = GameObject.Find("Cloud Recognition").GetComponent<CloudRecoEventHandler>();
+         cloudRecoBtnVisible = false;
+         cloudRecoEventHandler.gameObject.SetActive(false);
+        qrRecognized = false;
+        bcontShowButton = false;
       imgRecClick = 0;
         //cloudRecoEventHandler = GameObject.Find("Cloud Recognition").GetComponent<CloudRecoEventHandler>();
    
@@ -53,6 +58,7 @@ public class buttonControl : MonoBehaviour
         menuCanvas = GameObject.Find("menuCanvas");
         menuCanvas.SetActive(false);
         vScannerButton = GameObject.Find("mainCanvas").GetComponent<VScannerButton>();
+        
         pdfrend = GameObject.Find("PDFViewer");
         pdfrend.SetActive(false);
         closePdf.gameObject.SetActive(false);
@@ -128,16 +134,32 @@ public class buttonControl : MonoBehaviour
             menuClick = 0;
         }
     }
-  
+  public void changeBtnText(){
+    
+  }
     public void Update()
     {
-         
+       
+         if (bcontShowButton && !videoPlayerIsOpen && !cloudRecoEventHandler.showButton && inputUrlString != "") {
+            
+            btnQrRecognized.gameObject.SetActive(true);
+            if (btnQrRecognized.IsActive()){
+                 if (btnQrRecognized.gameObject.GetComponentInChildren<Text>().IsActive() && splitString != null) {
+                     btnQrRecognized.gameObject.GetComponentInChildren<Text>().text = "Kohde tunnistettu: "+ splitString[splitString.Length-2] + "\n" +" Paina nollataksesi tunnistetiedot.";
+      }
+            }
+           
+             
+        }
+        else if (!bcontShowButton){
+            btnQrRecognized.gameObject.SetActive(false);
+        }
        //jatkuva skannaus poist päältä jos infopanel auki.
         if(infopanel.gameObject.activeInHierarchy){
             bcontContScan = false;
         }
         if (!cloudRecognition.gameObject.activeInHierarchy) {
-            btnImgRec.gameObject.SetActive(false);
+            btnImgRecognized.gameObject.SetActive(false);
         }
       
          //allaolevat 3 iffiä ovat videoUIn piilotus/näyttämistä varten videon pyöriessä
@@ -178,9 +200,11 @@ public class buttonControl : MonoBehaviour
                 loading.gameObject.SetActive(false);
                 infoText.text = "Osoita QR koodia.  Onnistunut skannaus avaa valikon oikeaan reunaan.";
                 videoPlayerIsOpen = false;
+
                
                  pdf.gameObject.SetActive(true);
                 vid.gameObject.SetActive(true);
+                
                 closePdf.gameObject.SetActive(false);
                 vScannerButton.restartScan = true;
                 x = "";
@@ -188,6 +212,7 @@ public class buttonControl : MonoBehaviour
                 //näytä pdf ja vid-napit
             case "pdfvid":
               if (inputUrlString != ""){
+                  Debug.Log("kutsuttu urlformia " + inputUrlString);
                  urlForming(inputUrlString);
                }
                 pdf.gameObject.SetActive(true);
@@ -242,6 +267,7 @@ public class buttonControl : MonoBehaviour
                 infoBtn.gameObject.SetActive(false);
                 pdf.gameObject.SetActive(false);
                 vid.gameObject.SetActive(false);
+                btnQrRecognized.gameObject.SetActive(false);
              
               x = "";
                 break;
@@ -278,7 +304,7 @@ public class buttonControl : MonoBehaviour
      
                 x = "";
                 break;
-          
+           
             default:
              x = "";
                 break;
@@ -287,7 +313,29 @@ public class buttonControl : MonoBehaviour
        
     }
     }
-   
+   public void resetInfo(string hideButtonName){
+       targetPathForMP4 = "";
+       targetPathForPDF = "";
+       inputUrlString = "";
+       splitString = null;
+       formattedUrl = "";
+       formattedUrlForMP4 = "";
+       formattedUrlForPDF = "";
+       pdf.gameObject.SetActive(false);
+       vid.gameObject.SetActive(false);
+       if (hideButtonName == "bcontShowButton") {
+           
+             bcontShowButton = false;
+              Debug.Log("bcontshowbutton: " + bcontShowButton);
+       }
+        if (hideButtonName == "showButton") {
+           
+            cloudRecoEventHandler.showButton = false;
+       }
+      
+      
+       
+   }
     public void imgRecOnOff(){
         if (!imgRec && imgRecClick == 0){
              imageTarget.gameObject.SetActive(true);
@@ -348,13 +396,16 @@ public class buttonControl : MonoBehaviour
         public void stringSplitting(string t) {
           
             splitString = t.Split('/');
+              
       
                 
     }
     //muodostetaan urlit ja kohdepolut.
     public void urlForming(string inputUrl){
         stringSplitting(inputUrl);
+        Debug.Log("splitattu: " + splitString[2]);
         urlOK = true;
+          bcontShowButton = true;
         formattedUrlForPDF = inputUrl+ splitString[splitString.Length-2]+".pdf";
      
                 

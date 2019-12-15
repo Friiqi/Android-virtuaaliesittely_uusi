@@ -11,12 +11,12 @@ public class CloudRecoEventHandler : MonoBehaviour, IObjectRecoEventHandler
     TargetFinder m_TargetFinder;
   
     public buttonControl bcont;
-    public Button imgRecBtn;
+    public Button btnImgRecognized;
     public ImageTargetBehaviour m_ImageTargetBehaviour;
     public UnityEngine.UI.Image m_CloudActivityIcon;
     public UnityEngine.UI.Image m_CloudIdleIcon;
     public string recogImgName, recogImgUrl;
-      bool mIsScanning,showButton;
+    public bool mIsScanning,showButton;
 
 
 
@@ -47,12 +47,12 @@ public class CloudRecoEventHandler : MonoBehaviour, IObjectRecoEventHandler
         {
             SetCloudActivityIconVisible(m_TargetFinder.IsRequesting());
         }
-        if (showButton) {
-            imgRecBtn.gameObject.SetActive(true);
-            imgRecBtn.gameObject.GetComponentInChildren<Text>().text = "Kohde tunnistettu: " + bcont.recImgName + "\n" +" Paina jatkaaksesi kuvatunnistusta.";
+        if (showButton ) {
+            btnImgRecognized.gameObject.SetActive(true);
+            btnImgRecognized.gameObject.GetComponentInChildren<Text>().text = "Kohde tunnistettu: " + bcont.recImgName + "\n" +" Paina jatkaaksesi kuvatunnistusta.";
         }
-        if (!showButton){
-            imgRecBtn.gameObject.SetActive(false);
+        if (!showButton || bcont.videoPlayerIsOpen){
+            btnImgRecognized.gameObject.SetActive(false);
         }
         /*
         if (m_CloudIdleIcon)
@@ -124,16 +124,17 @@ public class CloudRecoEventHandler : MonoBehaviour, IObjectRecoEventHandler
          
           bcont.recImgName = targetSearchResult.TargetName;
           bcont.recImgUrl = cloudRecoResult.MetaData;
-           //bcont.objectCreation();
+           
             bcont.x = "imgRecognized";
             
-           
+           /*
             Debug.Log("MetaData: " + cloudRecoResult.MetaData);
             Debug.Log("TargetName: " + cloudRecoResult.TargetName);
             Debug.Log("Pointer: " + cloudRecoResult.TargetSearchResultPtr);
             //Debug.Log("TargetSize: " + cloudRecoResult.TargetSize);
             Debug.Log("TrackingRating: " + cloudRecoResult.TrackingRating);
             Debug.Log("UniqueTargetId: " + cloudRecoResult.UniqueTargetId);
+            */
         }
 
         // Changing CloudRecoBehaviour.CloudRecoEnabled to false will call TargetFinder.Stop()
@@ -169,9 +170,13 @@ public class CloudRecoEventHandler : MonoBehaviour, IObjectRecoEventHandler
 }
 
 public void restartScan(){
-   
+    //resetqr toiminta kelpaa tähänkin.
+   bcont.resetInfo("showButton");
     m_CloudRecoBehaviour.CloudRecoEnabled = true;
-    showButton = false;
+   m_TargetFinder.ClearTrackables(false);
+   m_TargetFinder.StartRecognition();
+   Debug.Log("showbutton: " + showButton);
+    
 
 }
    

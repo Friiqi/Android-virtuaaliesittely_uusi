@@ -16,6 +16,7 @@ public class track : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public Slider audioVolumeSlider; //= video.SetDirectAudioVolume(0, Volume().audioVolumeSlider.value);
     Slider tracking;
     bool slide = false;
+    private float frame;
 
     // Start is called before the first frame update
     void Start()
@@ -28,10 +29,14 @@ public class track : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     }
 
     public void OnPointerUp(PointerEventData a) {
-        float frame = (float) tracking.value * (float)video.frameCount;
-        video.frame = (long)frame;
+         frame = (float) tracking.value * (float)video.frameCount;
+        StartCoroutine(jumpToFrame());
          slide = false;
     }
+    private IEnumerator jumpToFrame() {
+    yield return video.frame = (long)frame;
+    }
+    
     // Update is called once per frame
     void Update()
     {

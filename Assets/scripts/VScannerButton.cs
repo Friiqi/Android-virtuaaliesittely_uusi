@@ -82,10 +82,13 @@ private IEnumerator InitializeCamera()
         if (data != null)
             {
             // QRCode detected.
-            bcont.x = "pdfvid";
+           
+            bcont.qrRecognized = true;
+          
                 isDecoding = false;
                 bcont.inputUrlString = data.ToString();
-            
+                
+                bcont.x = "pdfvid";
                 data = null;
             }
         else
