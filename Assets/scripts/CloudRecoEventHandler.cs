@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using Vuforia;
+using UnityEngine.UI;
 
 
 public class CloudRecoEventHandler : MonoBehaviour, IObjectRecoEventHandler
@@ -9,20 +10,23 @@ public class CloudRecoEventHandler : MonoBehaviour, IObjectRecoEventHandler
     ObjectTracker m_ObjectTracker;
     TargetFinder m_TargetFinder;
   
-
-
+    public buttonControl bcont;
+    public Button btnImgRecognized;
     public ImageTargetBehaviour m_ImageTargetBehaviour;
     public UnityEngine.UI.Image m_CloudActivityIcon;
     public UnityEngine.UI.Image m_CloudIdleIcon;
-  
+    public string recogImgName, recogImgUrl;
+    public bool mIsScanning,showButton;
 
 
 
-
-
+//tämä scipta hoitaa vuforian pilvitunnistuksen.
 
     void Start()
     {
+        
+         bcont = GameObject.Find("mainCanvas").GetComponent<buttonControl>();
+         showButton = false;
         // Register this event handler at the CloudRecoBehaviour
         m_CloudRecoBehaviour = GetComponent<CloudRecoBehaviour>();
         if (m_CloudRecoBehaviour)
@@ -43,7 +47,13 @@ public class CloudRecoEventHandler : MonoBehaviour, IObjectRecoEventHandler
         {
             SetCloudActivityIconVisible(m_TargetFinder.IsRequesting());
         }
-
+        if (showButton ) {
+            btnImgRecognized.gameObject.SetActive(true);
+            btnImgRecognized.gameObject.GetComponentInChildren<Text>().text = "Kohde tunnistettu: " + bcont.recImgName + "\n" +" Paina jatkaaksesi kuvatunnistusta.";
+        }
+        if (!showButton || bcont.videoPlayerIsOpen){
+            btnImgRecognized.gameObject.SetActive(false);
+        }
         /*
         if (m_CloudIdleIcon)
         {
@@ -78,7 +88,7 @@ public class CloudRecoEventHandler : MonoBehaviour, IObjectRecoEventHandler
     public void OnStateChanged(bool scanning)
     {
         Debug.Log("<color=blue>OnStateChanged(): </color>" + scanning);
-
+        mIsScanning = true;
         // Changing CloudRecoBehaviour.CloudRecoEnabled to false will call:
         // 1. TargetFinder.Stop()
         // 2. All registered ICloudRecoEventHandler.OnStateChanged() with false.
@@ -110,18 +120,28 @@ public class CloudRecoEventHandler : MonoBehaviour, IObjectRecoEventHandler
         }
         else
         {
+            
+         
+          bcont.recImgName = targetSearchResult.TargetName;
+          bcont.recImgUrl = cloudRecoResult.MetaData;
+           
+            bcont.x = "imgRecognized";
+            
+           /*
             Debug.Log("MetaData: " + cloudRecoResult.MetaData);
             Debug.Log("TargetName: " + cloudRecoResult.TargetName);
             Debug.Log("Pointer: " + cloudRecoResult.TargetSearchResultPtr);
             //Debug.Log("TargetSize: " + cloudRecoResult.TargetSize);
             Debug.Log("TrackingRating: " + cloudRecoResult.TrackingRating);
             Debug.Log("UniqueTargetId: " + cloudRecoResult.UniqueTargetId);
+            */
         }
 
         // Changing CloudRecoBehaviour.CloudRecoEnabled to false will call TargetFinder.Stop()
         // and also call all registered ICloudRecoEventHandler.OnStateChanged() with false.
         m_CloudRecoBehaviour.CloudRecoEnabled = false;
-
+        mIsScanning = false;
+        showButton = true;
         // Clear any existing trackables
         m_TargetFinder.ClearTrackables(false);
 
@@ -130,10 +150,35 @@ public class CloudRecoEventHandler : MonoBehaviour, IObjectRecoEventHandler
 
         // Pass the TargetSearchResult to the Trackable Event Handler for processing
         m_ImageTargetBehaviour.gameObject.SendMessage("TargetCreated", cloudRecoResult, SendMessageOptions.DontRequireReceiver);
+        
     }
- 
+ void OnGUI() {
+    // Display current 'scanning' status
+    //GUI.Box (new Rect(100,100,200,50), mIsScanning ? "Scanning" : "Not scanning");
+    // Display metadata of latest detected cloud-target
+    //GUI.Box (new Rect(100,200,200,50), "Metadata: " + mTargetMetadata);
+    // If not scanning, show button
+    // so that user can restart cloud scanning
+    /*
+    if (!mIsScanning) {
+        if (GUI.Button(new Rect(440,600,400,100), "Kohde tunnistettu: " + bcont.recImgName + "\n" +" Jatka kuvatunnistusta.")) {
+        // Restart TargetFinder
+        m_CloudRecoBehaviour.CloudRecoEnabled = true;
+        }
+    }
+    */
+}
 
+public void restartScan(){
+    //resetqr toiminta kelpaa tähänkin.
+   bcont.resetInfo("showButton");
+    m_CloudRecoBehaviour.CloudRecoEnabled = true;
+   m_TargetFinder.ClearTrackables(false);
+   m_TargetFinder.StartRecognition();
+   Debug.Log("showbutton: " + showButton);
+    
 
+}
    
     void SetCloudActivityIconVisible(bool visible)
     {

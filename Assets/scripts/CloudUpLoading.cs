@@ -14,11 +14,11 @@ using UnityEngine.Networking;
  
 public class CloudUpLoading : MonoBehaviour
 {
- 
+
     public Texture2D texture;
     
-    private string access_key = "43f39e1385114b3d8b88684c9059e88e3ac4e981";
-    private string secret_key = "2eed3292fc235b6e82b2672fcba784eb265391e9";
+    private string access_key = "yourkeyhere";
+    private string secret_key = "yourkeyhere";
     private string url = @"https://vws.vuforia.com";//@"<a href="https://vws.vuforia.com";//">https://vws.vuforia.com";</a>
     private string targetName = "MyTarget5"; // must change when upload another Image Target, avoid same as exist Image on cloud
     

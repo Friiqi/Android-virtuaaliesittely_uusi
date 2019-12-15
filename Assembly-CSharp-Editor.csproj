@@ -58,7 +58,6 @@
      <Compile Include="Assets\Paroxe\PDFRenderer\Internal\Editor\PDFViewerEditor.cs" />
      <Compile Include="Assets\Paroxe\PDFRenderer\Internal\Editor\PRHelper.cs" />
      <Compile Include="Assets\Paroxe\PDFRenderer\Internal\Editor\WebGLPostBuild.cs" />
-     <None Include="Assets\Editor\Vuforia\Body_RGD-MY-001-DM_vivid.stl\authoringinfo.xml" />
  <Reference Include="UnityEditor.TestRunner">
  <HintPath>D:/unity/projektit/Android-virtuaaliesittely_uusi/Library/ScriptAssemblies/UnityEditor.TestRunner.dll</HintPath>
  </Reference>
