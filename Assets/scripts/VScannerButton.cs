@@ -24,17 +24,16 @@ public class VScannerButton : MonoBehaviour
     buttonControl bcont; 
     private float secondsBetweenSpawns=1;
     void Start()
-    //piilotetaan pdf&video napit alussa
+    
     {      
-       
-       
+ 
         cur_Event = EventSystem.current;
         bcont = GameObject.Find("mainCanvas").GetComponent<buttonControl>();
         
         barCodeReader = new BarcodeReader();
         StartCoroutine(InitializeCamera());
         StartCoroutine(ScanEveryXSecond());
-        //InvokeRepeating("Scan", 0, 1.0f);
+        
     }   
     void Update() {
      if (restartScan){
@@ -99,10 +98,7 @@ private IEnumerator InitializeCamera()
 }
     public void Scan()
     {
-    
-    //tää tekee buttonControl-scriptissä pdf ja vid napit näkyviksi. se pitäisi olla tuolla try-catch lohkon sisällä sitten kun testailuvaihe ohi, nyt tässä kohtaa että voi testata ilman QR koodin tunnistustapahtumaa.
-    //bcont.x = "pdfvid";
-    
+
         if (cameraInitialized &&!isDecoding)
         {
             
@@ -115,10 +111,8 @@ private IEnumerator InitializeCamera()
                     Debug.Log("camerafeed null");
                     return;
                 }
-              // var data = barCodeReader.Decode(cameraFeed.Pixels, cameraFeed.BufferWidth, cameraFeed.BufferHeight, RGBLuminanceSource.BitmapFormat.Gray8);
+             //kutsutaan DecodeQR-funktiota uuteen threadiin
                 ThreadPool.QueueUserWorkItem(new WaitCallback(DecodeQr), cameraFeed);
-                
-               
        
             }
                 

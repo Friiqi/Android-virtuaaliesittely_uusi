@@ -38,8 +38,7 @@ public class buttonControl : MonoBehaviour
     private bool imgRec,cloudRecoBtnVisible;
     private int clickCounter = 0, menuClick = 0,imgRecClick;
     
-    //public CloudRecoEventHandler cloudRecoEventHandler;
-  
+    
      bool urlOK;
 
  
@@ -51,8 +50,7 @@ public class buttonControl : MonoBehaviour
         qrRecognized = false;
         bcontShowButton = false;
       imgRecClick = 0;
-        //cloudRecoEventHandler = GameObject.Find("Cloud Recognition").GetComponent<CloudRecoEventHandler>();
-   
+        
         infopanel.gameObject.SetActive(false);
         bcontContScan = true;
         menuCanvas = GameObject.Find("menuCanvas");
@@ -134,9 +132,7 @@ public class buttonControl : MonoBehaviour
             menuClick = 0;
         }
     }
-  public void changeBtnText(){
-    
-  }
+  
     public void Update()
     {
        
@@ -481,6 +477,7 @@ public class buttonControl : MonoBehaviour
          else if (s.EndsWith("/")){
              forceDownload = true;
               x = "loading";
+              //ensin ladataan pdf, sen valmistuttua ladataan mp4, sen valmistumisen jälkeen x-arvo vaihtuu jne. 
             yield return StartCoroutine(downloadPDFFromQr(formattedUrlForPDF));
             yield return StartCoroutine(downloadMP4FromQr(formattedUrlForMP4));
            x = "default";
