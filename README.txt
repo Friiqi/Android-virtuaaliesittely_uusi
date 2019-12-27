@@ -6,9 +6,8 @@ VScannerButton-skripti hoitaa QR-koodin lukemisen.
 CloudRecoEventHandler hoitaa pilven kautta tapahtuvan kuvatunnistuksen.
 CloudUpLoading skripti on mahdollista pilveen latausta varten (ei implementoitu tuota skriptiä pidemmälle tässä ohjelmistossa, ei ollenkaan käytössä.)
 tyhjä imagetarget on kuvatunnistusta varten (mikäli haluat esim lisätä tunnistettavaan kuvaan jonkin 3d-efektin niin se tulisi tähän).
-PDF renderer lisenssi on "vr@savonia.fi" unitytilillä (mikko pääkkönen teki tilin).
-Vuforia-lisenssi (ilmaislisenssi) on myös vr@savonia.fi nimisellä tilillä (sama salasana kuin unity vr@savonia.fi-tilillä), täältä löytyy myös vuforia datasetit (cloud recognition) mitä ohjelma
-käyttää (https://developer.vuforia.com/vui/auth/login)
+
+
 
 Pääasiassa buttonController-skriptissä oleva switch-case hoitaa UI elementtien näyttämistä/piilotusta sekä joissain tilanteissa syöte-stringin muokkauksen kutsua (urlForming(inputUrlString)).
 
