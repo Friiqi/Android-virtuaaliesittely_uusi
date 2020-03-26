@@ -32,7 +32,7 @@ public class buttonControl : MonoBehaviour
     public VideoPlayer video;
     public GameObject pdfrend,menuCanvas,infopanel,imageTarget, cloudRecognition;
      bool touchHappened,pressed;
-     public bool pdfChosen, videoChosen, bcontContScan,videoPlayerIsOpen,forceDownload,qrRecognized,bcontShowButton;
+     public bool pdfChosen, videoChosen, bcontContScan,videoPlayerIsOpen,forceDownload,qrRecognized,bcontShowButton,mp4UrlExists,mp4HasBeenTested;
     public Camera camToUse;
     public CloudRecoEventHandler cloudRecoEventHandler;
     private bool imgRec,cloudRecoBtnVisible;
@@ -50,9 +50,11 @@ public class buttonControl : MonoBehaviour
         qrRecognized = false;
         bcontShowButton = false;
       imgRecClick = 0;
-        
+        forceDownload = false;
         infopanel.gameObject.SetActive(false);
         bcontContScan = true;
+        mp4UrlExists = true;
+        mp4HasBeenTested = false;
         menuCanvas = GameObject.Find("menuCanvas");
         menuCanvas.SetActive(false);
         vScannerButton = GameObject.Find("mainCanvas").GetComponent<VScannerButton>();
@@ -141,7 +143,7 @@ public class buttonControl : MonoBehaviour
             btnQrRecognized.gameObject.SetActive(true);
             if (btnQrRecognized.IsActive()){
                  if (btnQrRecognized.gameObject.GetComponentInChildren<Text>().IsActive() && splitString != null) {
-                     btnQrRecognized.gameObject.GetComponentInChildren<Text>().text = "Kohde tunnistettu: "+ splitString[splitString.Length-2] + "\n" +" Paina nollataksesi tunnistetiedot.";
+                     btnQrRecognized.gameObject.GetComponentInChildren<Text>().text = "Kohde tunnistettu: "+ splitString[splitString.Length-1] + "\n" +" Paina nollataksesi tunnistetiedot.";
       }
             }
            
@@ -171,7 +173,9 @@ public class buttonControl : MonoBehaviour
         if ((touchHappened && video.isPlaying) || (touchHappened && video.isPaused)){
         x = "videoPlayerOpen";
     }
-    
+        if (mp4HasBeenTested && !File.Exists(targetPathForMP4)){
+            vid.gameObject.SetActive(false);
+        }
       if (imgRec) {
           btnImgRecOff.image.color = Color.white;
       }
@@ -198,9 +202,8 @@ public class buttonControl : MonoBehaviour
                 videoPlayerIsOpen = false;
 
                
-                 pdf.gameObject.SetActive(true);
-                vid.gameObject.SetActive(true);
-                
+                pdf.gameObject.SetActive(true);
+           
                 closePdf.gameObject.SetActive(false);
                 vScannerButton.restartScan = true;
                 x = "";
@@ -212,10 +215,21 @@ public class buttonControl : MonoBehaviour
                  urlForming(inputUrlString);
                }
                 pdf.gameObject.SetActive(true);
-                vid.gameObject.SetActive(true);
+              
+               
+                if (!mp4HasBeenTested || File.Exists(targetPathForMP4)){
+                    vid.gameObject.SetActive(true);
+                }
+              
                 infoBtn.gameObject.SetActive(true);
                 menuBtn.gameObject.SetActive(true);
-               
+                 if ((!File.Exists(targetPathForMP4) && mp4UrlExists) || !mp4HasBeenTested) {
+                    Debug.Log("nyt pitaisi alkaa coroutine");
+                    StartCoroutine(downloadMP4FromQr(formattedUrlForMP4));
+                     
+                    mp4HasBeenTested = true;
+                }
+            
                 x= "";
                
                 break;
@@ -235,18 +249,19 @@ public class buttonControl : MonoBehaviour
                 bcontContScan = false;
                 loading.gameObject.SetActive(true);
                 hideVideoMenus();
+              
                 //jos inputurlstring == "" niin silloin on url jo muodostettu urlFormin(recImgUrl) kautta.
                 if (!forceDownload){
                     if (inputUrlString != ""){
                         urlForming(inputUrlString);
                     }
-                    fileInLocalDevice(targetPathForMP4);
-            
-                    x = "";
+                        fileInLocalDevice(targetPathForMP4);
+                        x = "";
                 }
                 else if (forceDownload) {
                     loading.gameObject.SetActive(true);
                 }
+                 
                  x= "";
                 break;
 
@@ -295,7 +310,7 @@ public class buttonControl : MonoBehaviour
                  urlForming(inputUrlString);
                }
                 fileInLocalDevice(targetPathForPDF);
-    
+              
                 closePdf.gameObject.SetActive(true);
      
                 x = "";
@@ -303,12 +318,15 @@ public class buttonControl : MonoBehaviour
            
             default:
              x = "";
+             Debug.Log("defaultissa");
+            
                 break;
             
         }
        
     }
     }
+  
    public void resetInfo(string hideButtonName){
        targetPathForMP4 = "";
        targetPathForPDF = "";
@@ -319,6 +337,8 @@ public class buttonControl : MonoBehaviour
        formattedUrlForPDF = "";
        pdf.gameObject.SetActive(false);
        vid.gameObject.SetActive(false);
+       mp4UrlExists = true;
+        mp4HasBeenTested = false;
        if (hideButtonName == "bcontShowButton") {
            
              bcontShowButton = false;
@@ -399,22 +419,27 @@ public class buttonControl : MonoBehaviour
     //muodostetaan urlit ja kohdepolut.
     public void urlForming(string inputUrl){
         stringSplitting(inputUrl);
-        Debug.Log("splitattu: " + splitString[2]);
+        Debug.Log("splitattu: " + splitString[splitString.Length-1]);
         urlOK = true;
           bcontShowButton = true;
-        formattedUrlForPDF = inputUrl+ splitString[splitString.Length-2]+".pdf";
+        formattedUrlForMP4 = inputUrl.Substring(0, inputUrl.Length-4)+".mp4";
+     Debug.Log("formattedformp4 url: " + formattedUrlForMP4);
+     formattedUrlForPDF = inputUrl;
      
                 
-        formattedUrlForMP4 = inputUrl+ splitString[splitString.Length-2]+".mp4";
+       
         
-               
-        targetPathForPDF = Application.persistentDataPath + "/downloadedfiles/" + splitString[splitString.Length-2] +"/"+ splitString[splitString.Length-2]+".pdf";
-     
-        targetPathForMP4 = Application.persistentDataPath + "/downloadedfiles/" + splitString[splitString.Length-2] +"/"+ splitString[splitString.Length-2]+".mp4";
+               //ei tarvi erikseen lisätä .pdf koska tulos sisältää sen
+        targetPathForPDF = Application.persistentDataPath + "/downloadedfiles/" + splitString[splitString.Length-1];
+        //leikataan .pdf pois nimestä ja korvataan se .mp4:llä
+        targetPathForMP4 = Application.persistentDataPath + "/downloadedfiles/" + splitString[splitString.Length-1].Substring(0, splitString[splitString.Length -1].Length-4)+".mp4";
+        Debug.Log("targetpathmp4 : " + targetPathForMP4);
+        Debug.Log("targetpathpdf : " + targetPathForPDF);
+        
         
        
     }
-   
+ 
     public void fileInLocalDevice(string t) {
        
             if (File.Exists(t)) {
@@ -432,7 +457,7 @@ public class buttonControl : MonoBehaviour
             
                     }
             
-
+//filuja ei ole paikallisessa laitteessa, ladataan ne.
         else if (!File.Exists(t) ){
             if (t.EndsWith(".pdf")){
                 
@@ -440,7 +465,7 @@ public class buttonControl : MonoBehaviour
                 
             }
             else if (t.EndsWith(".mp4") ){
-                
+                Debug.Log("fileinlocal !file.existin sisalla");
                 StartCoroutine(waitCoroutine(formattedUrlForMP4));
                 
                
@@ -508,12 +533,12 @@ public class buttonControl : MonoBehaviour
   
       
          public IEnumerator downloadPDFFromQr(string t) {
-          
+          Debug.Log("dlpdf  kutsuttu");
        
             UnityWebRequest requ =  UnityWebRequest.Get(formattedUrlForPDF);
-            //luo kansio toiseksi viimeisen /-merkin jälkeisellä tekstillä nimettynä (tarkoitus olisi että se tulisi olemaan ko. esineen nimi, esim url muotoa www.savonia.fi/esine/ jolloin kansion nimi olisi "esine" ja oletamme että sieltä löytyy esine.mp4 ja esine.pdf ja että kaikki ko. esineeseen viitaavat asiat löytyvät sieltä) 
+            //luo kansio downloadedfiles asennuspolkuun jonne kaikki tiedostot ladataan 
           
-            System.IO.Directory.CreateDirectory(Application.persistentDataPath+ "/downloadedfiles/" + splitString[splitString.Length-2]);
+            System.IO.Directory.CreateDirectory(Application.persistentDataPath+ "/downloadedfiles/");
 
             yield return requ.SendWebRequest();
            if(!requ.isNetworkError || !requ.isHttpError) {
@@ -531,34 +556,45 @@ public class buttonControl : MonoBehaviour
                  infoText.text = "Ongelma internetyhteydessä!";
              }
          }
-
-
    public IEnumerator downloadMP4FromQr(string t) {
-           
-     
-            UnityWebRequest requ2 = UnityWebRequest.Get(formattedUrlForMP4);
-            //luo kansio toiseksi viimeisen /-merkin jälkeisellä tekstillä nimettynä (tarkoitus olisi että se tulisi olemaan ko. esineen nimi, esim url muotoa www.savonia.fi/esine/ jolloin kansion nimi olisi "esine" ja oletamme että sieltä löytyy esine.mp4 ja esine.pdf ja että kaikki ko. esineeseen viitaavat asiat löytyvät sieltä) 
-          
-            System.IO.Directory.CreateDirectory(Application.persistentDataPath+ "/downloadedfiles/" + splitString[splitString.Length-2]);
-
-            yield return requ2.SendWebRequest();
-            if(!requ2.isNetworkError || !requ2.isHttpError) {  
-                try {
-              
+            Debug.Log("dlmp4 kutsuttu");
                     
-                    File.WriteAllBytes(targetPathForMP4, requ2.downloadHandler.data);
+            UnityWebRequest requ2 = UnityWebRequest.Get(formattedUrlForMP4);
+          
+            //luo kansio downloadedfiles asennuspolkuun jonne kaikki tiedostot ladataan 
+             
+        
+                System.IO.Directory.CreateDirectory(Application.persistentDataPath+ "/downloadedfiles/");
+
+                yield return requ2.SendWebRequest();
+                if(!requ2.isNetworkError || !requ2.isHttpError) {  
+                    try {
+                        if(requ2.downloadHandler.data.Length > 2000){
+                                File.WriteAllBytes(targetPathForMP4, requ2.downloadHandler.data);
+                                mp4HasBeenTested = true;
+                            }
+                        else {
+                            mp4UrlExists = false;
+                            x = "default";
+                            Debug.Log("tiedostoa ei olemassa");
+                            mp4HasBeenTested = true;
+                            yield break;
+                            
+                        }
+                        }
+            
+                catch {
+                    Debug.Log("virhe: downloadMP4fromqr()");
                 }
-         
-              catch {
-                  Debug.Log("virhe: downloadMP4fromqr()");
-              }
-            }
+                }
 
-            else if(requ2.isNetworkError || requ2.isHttpError) {
-                 infoText.text = "Ongelma internetyhteydessä!";
-             }
-
-
-    }
+                else if(requ2.isNetworkError || requ2.isHttpError ) {
+                      mp4UrlExists = false;
+                        x = "default";
+                       
+                    infoText.text = "Ongelma internetyhteydessä!";
+                     yield break;
+                }
+   }
 }
 
