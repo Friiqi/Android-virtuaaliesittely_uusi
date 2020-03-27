@@ -238,6 +238,7 @@ public class buttonControl : MonoBehaviour
             case "imgRecognized":
            
             if(recImgUrl != null) {
+                inputUrlString = recImgUrl;
                 urlForming(recImgUrl);
                 pdf.gameObject.SetActive(true);
                 vid.gameObject.SetActive(true);
@@ -444,10 +445,11 @@ public class buttonControl : MonoBehaviour
                 
                     if (t.EndsWith(".pdf")){
                         pdfrend.SetActive(true);
+                        x = "pdfopen";
                         pdfViewer.LoadDocumentFromFile(t);
                     }
                     else if (t.EndsWith(".mp4")){
-                  
+                        x = "videoPlayerOpen";
                         video.url = t;
                         video.Prepare();
                         video.prepareCompleted += PrepareCompleted;       
@@ -518,7 +520,7 @@ public class buttonControl : MonoBehaviour
         yield return new WaitForSeconds(1);
         if (s.EndsWith(".pdf")){
               
-                pdfrend.SetActive(true);
+               
                fileInLocalDevice(targetPathForPDF);
             }
             else if (s.EndsWith(".mp4")){

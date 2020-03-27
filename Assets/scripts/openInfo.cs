@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class openInfo : MonoBehaviour
 {
@@ -18,7 +19,8 @@ public class openInfo : MonoBehaviour
     public void openInfoPanel() {
         if (counter == 0){
         bcont.infopanel.gameObject.SetActive(true);
-        
+          bcont.infoHeading.gameObject.GetComponentInChildren<Text>().fontSize = 50;
+                bcont.infoHeading.gameObject.GetComponentInChildren<Text>().text = "Info";
         counter++;
         }
         else if (counter == 1){

@@ -582,7 +582,7 @@ Animator:
   m_GameObject: {fileID: 92995018}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 7f57001013e5b9c4b89bce2b1b973ca1, type: 2}
+  m_Controller: {fileID: 9100000, guid: c010ba69388826949bcedc0628150d3f, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -1585,6 +1585,10 @@ PrefabInstance:
     - target: {fileID: 11456696, guid: f10f8c4f3a820d44c9e68a31a19f6708, type: 3}
       propertyPath: m_FileURL
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 11456696, guid: f10f8c4f3a820d44c9e68a31a19f6708, type: 3}
+      propertyPath: m_VerticalMarginBetweenPages
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 160574, guid: f10f8c4f3a820d44c9e68a31a19f6708, type: 3}
       propertyPath: m_IsActive
@@ -3043,6 +3047,7 @@ MonoBehaviour:
   recImgUrl: 
   infoText: {fileID: 696524246}
   loading: {fileID: 92995020}
+  infoHeading: {fileID: 763680316}
   splitString: []
   video: {fileID: 1185900794}
   pdfrend: {fileID: 1667251638}
@@ -3057,6 +3062,8 @@ MonoBehaviour:
   forceDownload: 0
   qrRecognized: 0
   bcontShowButton: 0
+  mp4UrlExists: 0
+  mp4HasBeenTested: 0
   camToUse: {fileID: 1071309084}
   cloudRecoEventHandler: {fileID: 0}
 --- !u!114 &1127774115
