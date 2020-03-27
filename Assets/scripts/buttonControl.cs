@@ -26,7 +26,7 @@ public class buttonControl : MonoBehaviour
       public PDFViewer pdfViewer;
      public string x="",inputUrlString ="",formattedUrlForPDF="",formattedUrlForMP4="",formattedUrl="",targetPathForPDF="",targetPathForMP4="",tempString,recImgName, recImgUrl;
      
-     public Text infoText,loading;
+     public Text infoText,loading, infoHeading;
      public string[] splitString;
      VScannerButton vScannerButton;
     public VideoPlayer video;
@@ -200,8 +200,9 @@ public class buttonControl : MonoBehaviour
                 loading.gameObject.SetActive(false);
                 infoText.text = "Osoita QR koodia.  Onnistunut skannaus avaa valikon oikeaan reunaan.";
                 videoPlayerIsOpen = false;
-
-               
+                if (!mp4HasBeenTested || File.Exists(targetPathForMP4)){
+                    vid.gameObject.SetActive(true);
+                }
                 pdf.gameObject.SetActive(true);
            
                 closePdf.gameObject.SetActive(false);
@@ -223,7 +224,7 @@ public class buttonControl : MonoBehaviour
               
                 infoBtn.gameObject.SetActive(true);
                 menuBtn.gameObject.SetActive(true);
-                 if ((!File.Exists(targetPathForMP4) && mp4UrlExists) || !mp4HasBeenTested) {
+                 if (!File.Exists(targetPathForMP4) && !mp4HasBeenTested) {
                     Debug.Log("nyt pitaisi alkaa coroutine");
                     StartCoroutine(downloadMP4FromQr(formattedUrlForMP4));
                      
@@ -247,9 +248,11 @@ public class buttonControl : MonoBehaviour
             case "loading":
             
                 bcontContScan = false;
+               
                 loading.gameObject.SetActive(true);
+                 Debug.Log("loading object aktiiviseksi");
                 hideVideoMenus();
-              
+
                 //jos inputurlstring == "" niin silloin on url jo muodostettu urlFormin(recImgUrl) kautta.
                 if (!forceDownload){
                     if (inputUrlString != ""){
@@ -261,6 +264,7 @@ public class buttonControl : MonoBehaviour
                 else if (forceDownload) {
                     loading.gameObject.SetActive(true);
                 }
+            
                  
                  x= "";
                 break;
@@ -318,7 +322,7 @@ public class buttonControl : MonoBehaviour
            
             default:
              x = "";
-             Debug.Log("defaultissa");
+           
             
                 break;
             
@@ -421,23 +425,17 @@ public class buttonControl : MonoBehaviour
         stringSplitting(inputUrl);
         Debug.Log("splitattu: " + splitString[splitString.Length-1]);
         urlOK = true;
-          bcontShowButton = true;
+        bcontShowButton = true;
         formattedUrlForMP4 = inputUrl.Substring(0, inputUrl.Length-4)+".mp4";
-     Debug.Log("formattedformp4 url: " + formattedUrlForMP4);
-     formattedUrlForPDF = inputUrl;
-     
-                
-       
-        
-               //ei tarvi erikseen lisätä .pdf koska tulos sisältää sen
+        Debug.Log("formattedformp4 url: " + formattedUrlForMP4);
+        formattedUrlForPDF = inputUrl;
+        //ei tarvi erikseen lisätä .pdf koska tulos sisältää sen
         targetPathForPDF = Application.persistentDataPath + "/downloadedfiles/" + splitString[splitString.Length-1];
         //leikataan .pdf pois nimestä ja korvataan se .mp4:llä
         targetPathForMP4 = Application.persistentDataPath + "/downloadedfiles/" + splitString[splitString.Length-1].Substring(0, splitString[splitString.Length -1].Length-4)+".mp4";
         Debug.Log("targetpathmp4 : " + targetPathForMP4);
         Debug.Log("targetpathpdf : " + targetPathForPDF);
         
-        
-       
     }
  
     public void fileInLocalDevice(string t) {
@@ -482,9 +480,15 @@ public class buttonControl : MonoBehaviour
 //"pakotettu" lataus.
     public void updateFiles(){
      
-          
-            StartCoroutine(waitCoroutine(inputUrlString));
-           
+             forceDownload = true;
+             if (inputUrlString != ""){
+                StartCoroutine(waitCoroutine(inputUrlString));
+             }
+             else {
+                 infoHeading.gameObject.GetComponentInChildren<Text>().fontSize = 15;
+                 infoHeading.gameObject.GetComponentInChildren<Text>().text ="koitit pakottaa päivitystä ilman skannattua urlia";
+             }
+           Debug.Log(inputUrlString);
         
     }
     public IEnumerator waitCoroutine(string s){
@@ -499,15 +503,15 @@ public class buttonControl : MonoBehaviour
             yield return StartCoroutine((downloadMP4FromQr(s)));
             }
 
-         else if (s.EndsWith("/")){
-             forceDownload = true;
+         else if (forceDownload){
+            
               x = "loading";
-              //ensin ladataan pdf, sen valmistuttua ladataan mp4, sen valmistumisen jälkeen x-arvo vaihtuu jne. 
+              //ensin ladataan pdf, sen valmistuttua ladataan mp4, sen valmistumisen jälkeen x-arvo vaihtuu. 
             yield return StartCoroutine(downloadPDFFromQr(formattedUrlForPDF));
             yield return StartCoroutine(downloadMP4FromQr(formattedUrlForMP4));
            x = "default";
            forceDownload =false;
-            
+       
             }
        
        //avataan paikalliselta laitteelta latauksen jälkeen.
@@ -533,8 +537,8 @@ public class buttonControl : MonoBehaviour
   
       
          public IEnumerator downloadPDFFromQr(string t) {
-          Debug.Log("dlpdf  kutsuttu");
-       
+          Debug.Log("downloadpdffromqr  kutsuttu");
+            x = "loading";
             UnityWebRequest requ =  UnityWebRequest.Get(formattedUrlForPDF);
             //luo kansio downloadedfiles asennuspolkuun jonne kaikki tiedostot ladataan 
           
@@ -545,20 +549,22 @@ public class buttonControl : MonoBehaviour
                 try {
                    
                     File.WriteAllBytes(targetPathForPDF, requ.downloadHandler.data);
-                
+                    x = "pdfvid";
                 }
          
               catch {
                      Debug.Log("virhe: downloadPDFformQR()");
+                     x = "default";
               }
             }
            else if(requ.isNetworkError || requ.isHttpError) {
                  infoText.text = "Ongelma internetyhteydessä!";
+                 x = "default";
              }
          }
    public IEnumerator downloadMP4FromQr(string t) {
-            Debug.Log("dlmp4 kutsuttu");
-                    
+            Debug.Log("downloadpdffromqr kutsuttu");
+                    loading.gameObject.SetActive(true);
             UnityWebRequest requ2 = UnityWebRequest.Get(formattedUrlForMP4);
           
             //luo kansio downloadedfiles asennuspolkuun jonne kaikki tiedostot ladataan 
@@ -572,6 +578,8 @@ public class buttonControl : MonoBehaviour
                         if(requ2.downloadHandler.data.Length > 2000){
                                 File.WriteAllBytes(targetPathForMP4, requ2.downloadHandler.data);
                                 mp4HasBeenTested = true;
+                                loading.gameObject.SetActive(false);
+                                x = "pdfvid";
                             }
                         else {
                             mp4UrlExists = false;
@@ -585,6 +593,7 @@ public class buttonControl : MonoBehaviour
             
                 catch {
                     Debug.Log("virhe: downloadMP4fromqr()");
+                    x = "default";
                 }
                 }
 
