@@ -23,6 +23,8 @@ Tämä projekti oli käytännössä ensimmäinen kerta koskaan kun rakentelin t�
 
 Ikävä kyllä näissä skriptoissa kummittelee joitakin turhia (käyttämättömiä/vanhoja) funktioita ja elementtejä. Mutta ei saa tehdä asioita liian helpoksi.
 
+.apk tiedostot ovat pääasiassa turhia poislukien viimeisintä versiota, muut ovat jotain testausta varten buildattuja paketteja ja jääneet kummittelemaan tuonne.
+
 Nauttikaa!
 
 
