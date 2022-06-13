@@ -1,5 +1,10 @@
 Edit for anyone not knowing what this is:
-School project, mobile app for Savonia, created with Unity3d (odd choice for a mobile app, i know). Original idea was to make an app that would use AR and object recognition, but that was bit too much for my current skill levels and the image recognition seemed to have serious limitations, so in order to be able to create a working app within the timelimit, it was decided to just make an app that can read QR code and show videos and PDF files. Customer wanted an easy way for getting more information about objects in our schools 3d-printing lab, and to make it more like an interactive "tour".
+School project, mobile app for Savonia, created with Unity3d (odd choice for a mobile app, i know). Original idea was to make an app that would use AR and object recognition, 
+but that was bit too much for my current skill levels and the image recognition seemed to have serious limitations, so in order to be able to create a working app 
+
+within the timelimit, it was decided to just make an app that can read QR code and show videos and PDF files. 
+
+Customer wanted an easy way for getting more information about objects in our schools 3d-printing lab, and to make it more like an interactive "tour".
 
 
 
